@@ -1,6 +1,11 @@
-FROM dockerfile/java:oracle-java8
+FROM ubuntu:14.04
 MAINTAINER kanavpreet0@gmail.com
-ENV ES_PKG_NAME elasticsearch-1.5.0
+ENV ES_PKG_NAME elasticsearch-1.4.2
+
+
+RUN \
+  apt-get update && \
+  
 
 # Install Elasticsearch.
 RUN \
