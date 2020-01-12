@@ -1,0 +1,30 @@
+{
+    "service_1": {
+        "name": "service_1",
+        "priority": 100,
+        "key": "key_path",
+        "role": "server_bootstrap",
+        "healthchk_enabled": "true"
+    },
+    "service_2": {
+        "name": "service_2",
+        "priority": 200,
+        "key": "key_path",
+        "role": "server_bootstrap",
+        "healthchk_enabled": "false"
+    },
+    "service_3": {
+        "name": "service_3",
+        "priority": 101,
+        "key": "key_path",
+        "role": "server",
+        "healthchk_enabled": "true"
+    },
+    "service_4": {
+        "name": "service_4",
+        "priority": 301,
+        "key": "key_path",
+        "role": "client",
+        "healthchk_enabled": "true"
+    }
+}
