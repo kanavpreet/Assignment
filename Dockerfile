@@ -5,6 +5,13 @@ ENV ES_PKG_NAME elasticsearch-1.4.2
 
 RUN \
   apt-get update && \
+  apt-get install -y install python-software-properties && \
+  apt-get install -y install software-properties-common && \
+  add-apt-repository -y ppa:webu
+  apt-get update &&\
+  echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/deconf-set-selections && \
+  apt-get -y install oracle-java7-installer
+  
   
 
 # Install Elasticsearch.
