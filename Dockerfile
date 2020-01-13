@@ -1,42 +1,27 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 MAINTAINER kanavpreet0@gmail.com
-ENV ES_PKG_NAME elasticsearch-1.4.2
 
+RUN apt-get update && apt-get install wget build-essential gcc make -y
+RUN apt-get install common-software-properties  -y
+RUN apt-get install default-jdk -y
+RUN apt-get install openjdk-8-jre -y
+RUN apt-get update
+RUN wget -O - https://packages.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+RUN echo  "deb  http://packages.elastic.co/elasticsearch/2.x/debian stable main" | tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
+RUN apt-get update &&  apt-get install elasticsearch -y
+RUN apt-get install git -y
+RUN apt-get install python2.7 -y
+RUN apt-get install vim  -y
 
-RUN \
-  apt-get update && \
-  apt-get install -y install python-software-properties && \
-  apt-get install -y install software-properties-common && \
-  add-apt-repository -y ppa:webupd8team/java && \
+RUN apt-get update && apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
+RUN echo 'root:password' | chpasswd
+RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
-  apt-get update &&\
-  echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/deconf-set-selections && \
-  apt-get -y install oracle-java7-installer
-  
-  
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
+RUN service ssh restart
 
-# Install Elasticsearch.
-RUN \
-  cd / && \
-  wget https://download.elasticsearch.org/elasticsearch/elasticsearch/$ES_PKG_NAME.tar.gz && \
-  tar xvzf $ES_PKG_NAME.tar.gz && \
-  rm -f $ES_PKG_NAME.tar.gz && \
-  mv /$ES_PKG_NAME /elasticsearch
-
-# Define mountable directories.
-VOLUME ["/data"]
-
-# Mount elasticsearch.yml config
-ADD config/elasticsearch.yml /elasticsearch/config/elasticsearch.yml
-
-# Define working directory.
-WORKDIR /data
-
-# Define default command.
-CMD ["/elasticsearch/bin/elasticsearch"]
-
-# Expose ports.
-#   - 9200: HTTP
-#   - 9300: transport
-EXPOSE 9200
-EXPOSE 9300
